@@ -5,4 +5,5 @@ Steps to get this running:
   
 Currently working:
 * Procedural world generation including a background of dirt and sky.
-* Player movement including a sprite!
+* Player movement with WAD including a sprite!
+* Drilling with the arrow keys
