@@ -55,4 +55,12 @@ tile_set = SubResource("TileSet_0d8jp")
 tile_set = SubResource("TileSet_8nkuq")
 
 [node name="Player" parent="." instance=ExtResource("3_ljydt")]
-position = Vector2(576, -32)
+position = Vector2(556, -28)
+
+[node name="DrillTimer" type="Timer" parent="."]
+
+[connection signal="drill_down" from="Player" to="LayerHolder" method="_on_player_drill_down"]
+[connection signal="drill_left" from="Player" to="LayerHolder" method="_on_player_drill_left"]
+[connection signal="drill_right" from="Player" to="LayerHolder" method="_on_player_drill_right"]
+[connection signal="stop_drill" from="Player" to="LayerHolder" method="_on_player_stop_drill"]
+[connection signal="timeout" from="DrillTimer" to="LayerHolder" method="_on_drill_timer_timeout"]

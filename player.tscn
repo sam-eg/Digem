@@ -1,13 +1,16 @@
-[gd_scene load_steps=8 format=3 uid="uid://dyd305xyng33k"]
+[gd_scene load_steps=11 format=3 uid="uid://dyd305xyng33k"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_vasf4"]
 [ext_resource type="Texture2D" uid="uid://dto7ujkksf4su" path="res://player.png" id="2_o8ab4"]
 [ext_resource type="Texture2D" uid="uid://bn1lvj1886mdi" path="res://player_left.png" id="3_f1500"]
 [ext_resource type="Texture2D" uid="uid://cffpjh7wn8pux" path="res://player_right.png" id="4_aojim"]
 [ext_resource type="Texture2D" uid="uid://ctdsdkhcene38" path="res://player_up.png" id="5_5gtkv"]
+[ext_resource type="Texture2D" uid="uid://dme5ic4bpu2es" path="res://player_up_left.png" id="6_d7t74"]
+[ext_resource type="Texture2D" uid="uid://cchx70dlumt54" path="res://player_up_left_right.png" id="7_qtxv0"]
+[ext_resource type="Texture2D" uid="uid://b6bbca0u0msk1" path="res://player_up_right.png" id="8_csbvd"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1hkuk"]
-size = Vector2(40, 40)
+size = Vector2(50, 41)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_v1nhi"]
 animations = [{
@@ -42,15 +45,42 @@ animations = [{
 "loop": true,
 "name": &"up",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_d7t74")
+}],
+"loop": true,
+"name": &"up_left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_qtxv0")
+}],
+"loop": true,
+"name": &"up_left_right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_csbvd")
+}],
+"loop": true,
+"name": &"up_right",
+"speed": 5.0
 }]
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_vasf4")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -3.5)
 shape = SubResource("RectangleShape2D_1hkuk")
 
 [node name="Camera" type="Camera2D" parent="."]
+zoom = Vector2(1.4, 1.4)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_v1nhi")
+animation = &"up_right"

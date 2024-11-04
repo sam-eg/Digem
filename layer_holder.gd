@@ -3,12 +3,21 @@ extends Node2D
 @onready var land = $Land
 @onready var background = $Background
 @onready var player = $"../Player"
+@onready var drill_timer = $"../DrillTimer"
 
 const LAND_SOURCE_ID = 0
 const DIRT_TILE = Vector2i(3, 0)
 const STONE_TILE = Vector2i(2, 1)
 const GOLD_TILE = Vector2i(4, 0)
 const AIR_TILE = Vector2i(0, 0)
+
+const DIRT_DRILL_TIME = 1.0
+const STONE_DRILL_TIME = 2.0
+const GOLD_DRILL_TIME = 1.5
+
+const DIRECTION_LEFT = "left"
+const DIRECTION_RIGHT = "right"
+const DIRECTION_DOWN = "down"
 
 const BACKGROUND_SKY_SOURCE_ID = 0
 const BACKGROUND_GROUND_SOURCE_ID = 1
@@ -17,7 +26,11 @@ const BACKGROUND_TILE = Vector2i(0, 0)
 const TILE_SIZE = 64
 const CHUNK_SIZE = 32
 
-var landMap = {} # Dictionary aka map. GDScript, eh?
+var land_map = {} # Dictionary aka map. GDScript, eh?
+
+var drilling_location
+var drilled_tile
+var drill_direction
 
 func _process(_delta):
 	load_chunk(player.position)
@@ -39,8 +52,8 @@ func load_chunk(player_position):
 					background.set_cell(current_tile_position, BACKGROUND_GROUND_SOURCE_ID, BACKGROUND_TILE)
 
 			var tile_type
-			if landMap.has(current_tile_position): # Check if we already generated a tile for this position
-				tile_type = landMap[current_tile_position]
+			if land_map.has(current_tile_position): # Check if we already generated a tile for this position
+				tile_type = land_map[current_tile_position]
 			elif land.get_cell_source_id(current_tile_position) == -1 && current_tile_position.y >= 0:
 				var tile_type_rand = randi() % 20
 				
@@ -56,4 +69,62 @@ func load_chunk(player_position):
 			# If we have a new tile type and the tile is empty
 			if tile_type != null and land.get_cell_source_id(current_tile_position) == -1:
 				land.set_cell(current_tile_position, LAND_SOURCE_ID, tile_type)
-				landMap[current_tile_position] = tile_type
+				land_map[current_tile_position] = tile_type
+
+
+func _on_player_drill_down():
+	drill(DIRECTION_DOWN)
+
+
+func _on_player_drill_left():
+	drill(DIRECTION_LEFT)
+
+
+func _on_player_drill_right():
+	drill(DIRECTION_RIGHT)
+
+
+func _on_player_stop_drill():
+	drilling_location = null
+	drilled_tile = null
+	drill_direction = null
+
+
+func drill(direction):
+	var current_tile = land.local_to_map(player.get_global_position())
+	var drill_tile_position
+	match direction:
+		DIRECTION_DOWN:
+			drill_tile_position = current_tile + Vector2i.DOWN
+		DIRECTION_LEFT:
+			drill_tile_position = current_tile + Vector2i.LEFT
+		DIRECTION_RIGHT:
+			drill_tile_position = current_tile + Vector2i.RIGHT
+		_:
+			pass
+
+	if drill_tile_position != null:
+		var tile_type = land.get_cell_atlas_coords(drill_tile_position)
+		if tile_type != AIR_TILE and tile_type != Vector2i(-1, -1):
+			drilling_location = current_tile
+			drilled_tile = drill_tile_position
+			drill_direction = direction
+
+		if tile_type == DIRT_TILE:
+			drill_timer.start(DIRT_DRILL_TIME)
+		if tile_type == STONE_TILE:
+			drill_timer.start(STONE_DRILL_TIME)
+		if tile_type == GOLD_TILE:
+			drill_timer.start(GOLD_DRILL_TIME)
+
+
+func _on_drill_timer_timeout():
+	var current_tile = land.local_to_map(player.get_global_position())
+	if current_tile != drilling_location: # Player moved after starting drill
+		drilling_location = null
+		drilled_tile = null
+		drill_direction = null
+	
+	if drilled_tile != null and drilled_tile != null and drill_direction != null:
+		land.set_cell(drilled_tile, LAND_SOURCE_ID, AIR_TILE)
+		land_map[drilled_tile] = AIR_TILE

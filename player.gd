@@ -1,5 +1,10 @@
 extends CharacterBody2D
 
+signal drill_down
+signal drill_left
+signal drill_right
+signal stop_drill
+
 @onready var animated_sprite = $AnimatedSprite2D
 
 const MAX_SPEED = 750.0
@@ -19,6 +24,12 @@ func _physics_process(delta):
 	if Input.is_action_pressed("up"):
 		input_direction.y -= 1
 		animated_sprite.play("up")
+	if Input.is_action_pressed("up") and Input.is_action_pressed("left"):
+		animated_sprite.play("up_left")
+	if Input.is_action_pressed("up") and Input.is_action_pressed("right"):
+		animated_sprite.play("up_right")
+	if Input.is_action_pressed("up") and Input.is_action_pressed("left") and Input.is_action_pressed("right"):
+		animated_sprite.play("up_left_right")
 	if !Input.is_action_pressed("left") and !Input.is_action_pressed("right") and !Input.is_action_pressed("up"):
 		animated_sprite.play("default")
 	
@@ -57,3 +68,13 @@ func _physics_process(delta):
 		else:
 			pass
 			#print ("Collided with ", collision.get_collider().name)
+
+func _process(delta):
+	if Input.is_action_just_pressed("drill_down"):
+		drill_down.emit()
+	if Input.is_action_just_pressed("drill_left"):
+		drill_left.emit()
+	if Input.is_action_just_pressed("drill_right"):
+		drill_right.emit()
+	if Input.is_action_just_released("drill_down") or Input.is_action_just_released("drill_left") or Input.is_action_just_released("drill_right"):
+		stop_drill.emit()
