@@ -4,6 +4,7 @@ extends Node2D
 @onready var background = $Background
 @onready var player = $"../Player"
 @onready var drill_timer = $"../DrillTimer"
+@onready var drill_particles = $"../DrillParticles"
 
 const LAND_SOURCE_ID = 0
 const DIRT_TILE = Vector2i(3, 0)
@@ -85,9 +86,7 @@ func _on_player_drill_right():
 
 
 func _on_player_stop_drill():
-	drilling_location = null
-	drilled_tile = null
-	drill_direction = null
+	reset_drilling()
 
 
 func drill(direction):
@@ -109,6 +108,8 @@ func drill(direction):
 			drilling_location = current_tile
 			drilled_tile = drill_tile_position
 			drill_direction = direction
+			drill_particles.emitting = true
+			drill_particles.position = land.map_to_local(drilled_tile)
 
 		if tile_type == DIRT_TILE:
 			drill_timer.start(DIRT_DRILL_TIME)
@@ -121,10 +122,16 @@ func drill(direction):
 func _on_drill_timer_timeout():
 	var current_tile = land.local_to_map(player.get_global_position())
 	if current_tile != drilling_location: # Player moved after starting drill
-		drilling_location = null
-		drilled_tile = null
-		drill_direction = null
+		reset_drilling()
 	
 	if drilled_tile != null and drilled_tile != null and drill_direction != null:
 		land.set_cell(drilled_tile, LAND_SOURCE_ID, AIR_TILE)
 		land_map[drilled_tile] = AIR_TILE
+		reset_drilling()
+
+
+func reset_drilling():
+	drilling_location = null
+	drilled_tile = null
+	drill_direction = null
+	drill_particles.emitting = false
