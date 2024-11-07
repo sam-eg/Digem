@@ -79,7 +79,7 @@ position = Vector2(0, -3.5)
 shape = SubResource("RectangleShape2D_1hkuk")
 
 [node name="Camera" type="Camera2D" parent="."]
-zoom = Vector2(0.2, 0.2)
+zoom = Vector2(1.4, 1.4)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_v1nhi")
