@@ -13,14 +13,14 @@ config_version=5
 config/name="Digem"
 run/main_scene="res://world.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
+run/max_fps=60
 config/icon="res://icon.svg"
 
 [display]
 
 window/size/viewport_width=1280
 window/size/viewport_height=1280
-window/stretch/mode="canvas_items"
-window/stretch/aspect="ignore"
+window/stretch/mode="viewport"
 
 [input]
 
