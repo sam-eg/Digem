@@ -1,5 +1,7 @@
 extends Node2D
 
+signal drilled_gold
+
 @onready var land = $Land
 @onready var background = $Background
 @onready var player = $"../Player"
@@ -32,6 +34,7 @@ var land_map = {} # Dictionary aka map. GDScript, eh?
 var drilling_location
 var drilled_tile
 var drill_direction
+var is_drilling_tile_gold
 
 func _process(_delta):
 	load_chunk(player.position)
@@ -108,6 +111,7 @@ func drill(direction):
 			drilling_location = current_tile
 			drilled_tile = drill_tile_position
 			drill_direction = direction
+			is_drilling_tile_gold = tile_type == GOLD_TILE
 			drill_particles.emitting = true
 			drill_particles.position = land.map_to_local(drilled_tile)
 
@@ -127,6 +131,8 @@ func _on_drill_timer_timeout():
 	if drilled_tile != null and drilled_tile != null and drill_direction != null:
 		land.set_cell(drilled_tile, LAND_SOURCE_ID, AIR_TILE)
 		land_map[drilled_tile] = AIR_TILE
+		if is_drilling_tile_gold:
+			emit_signal("drilled_gold")
 		reset_drilling()
 
 
@@ -134,4 +140,5 @@ func reset_drilling():
 	drilling_location = null
 	drilled_tile = null
 	drill_direction = null
+	is_drilling_tile_gold = false
 	drill_particles.emitting = false

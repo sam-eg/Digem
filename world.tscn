@@ -82,6 +82,33 @@ emitting = false
 amount = 60
 process_material = SubResource("ParticleProcessMaterial_4u1u8")
 
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1.0
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MoneyLabel" type="Label" parent="UI/Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.054
+anchor_top = 0.041
+anchor_right = 0.446
+anchor_bottom = 0.118
+offset_left = -0.0660019
+offset_top = -0.439003
+offset_right = -0.434021
+offset_bottom = 0.0779877
+theme_override_font_sizes/font_size = 72
+text = "$0.00"
+
+[connection signal="drilled_gold" from="LayerHolder" to="Player" method="_on_layer_holder_drilled_gold"]
 [connection signal="drill_down" from="Player" to="LayerHolder" method="_on_player_drill_down"]
 [connection signal="drill_left" from="Player" to="LayerHolder" method="_on_player_drill_left"]
 [connection signal="drill_right" from="Player" to="LayerHolder" method="_on_player_drill_right"]

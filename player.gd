@@ -6,10 +6,15 @@ signal drill_right
 signal stop_drill
 
 @onready var animated_sprite = $AnimatedSprite2D
+@onready var money_label = $"../UI/Control/MoneyLabel"
 
 const MAX_SPEED = 750.0
 const ACCELERATION = 500.0 
-const FRICTION = 1500.0 
+const FRICTION = 1500.0
+
+const GOLD_VALUE = 25.0
+
+var money = 0.0
 
 func _physics_process(delta):
 	var input_direction = Vector2()
@@ -78,3 +83,9 @@ func _process(delta):
 		drill_right.emit()
 	if Input.is_action_just_released("drill_down") or Input.is_action_just_released("drill_left") or Input.is_action_just_released("drill_right"):
 		stop_drill.emit()
+
+	money_label.text = "$" + "%.2f" % money
+
+
+func _on_layer_holder_drilled_gold():
+	money += GOLD_VALUE
