@@ -37,6 +37,7 @@ var drill_direction
 var is_drilling_tile_gold
 
 func _process(_delta):
+
 	load_chunk(player.position)
 
 func load_chunk(player_position):

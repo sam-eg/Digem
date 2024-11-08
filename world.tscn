@@ -1,10 +1,12 @@
-[gd_scene load_steps=14 format=3 uid="uid://cn3fr85akqbbj"]
+[gd_scene load_steps=16 format=3 uid="uid://cn3fr85akqbbj"]
 
+[ext_resource type="Script" path="res://world.gd" id="1_byn0y"]
 [ext_resource type="Script" path="res://layer_holder.gd" id="1_tppkh"]
 [ext_resource type="Texture2D" uid="uid://dvne3q43e4o2d" path="res://simple64x_tiles6.png" id="2_rchwp"]
 [ext_resource type="Texture2D" uid="uid://bcv4tijsen1ai" path="res://sky.png" id="2_u4yu6"]
 [ext_resource type="Texture2D" uid="uid://b8pk45e5s0g6f" path="res://ground.png" id="3_co1vy"]
 [ext_resource type="PackedScene" uid="uid://dyd305xyng33k" path="res://player.tscn" id="3_ljydt"]
+[ext_resource type="Texture2D" uid="uid://7v60r0v7etyi" path="res://Fuel.png" id="6_r8ohh"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8u342"]
 texture = ExtResource("2_u4yu6")
@@ -62,6 +64,7 @@ scale_curve = SubResource("CurveTexture_xnr0u")
 color = Color(0.878846, 0.721191, 0.372613, 1)
 
 [node name="World" type="Node2D"]
+script = ExtResource("1_byn0y")
 
 [node name="LayerHolder" type="Node2D" parent="."]
 script = ExtResource("1_tppkh")
@@ -73,7 +76,7 @@ tile_set = SubResource("TileSet_0d8jp")
 tile_set = SubResource("TileSet_8nkuq")
 
 [node name="Player" parent="." instance=ExtResource("3_ljydt")]
-position = Vector2(556, -28)
+position = Vector2(102, -32)
 
 [node name="DrillTimer" type="Timer" parent="."]
 
@@ -84,7 +87,7 @@ process_material = SubResource("ParticleProcessMaterial_4u1u8")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="Control" type="Control" parent="UI"]
+[node name="PlayingControl" type="Control" parent="UI"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -94,23 +97,86 @@ offset_bottom = -1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MoneyLabel" type="Label" parent="UI/Control"]
+[node name="MoneyLabel" type="Label" parent="UI/PlayingControl"]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.054
-anchor_top = 0.041
-anchor_right = 0.446
-anchor_bottom = 0.118
-offset_left = -0.0660019
-offset_top = -0.439003
-offset_right = -0.434021
-offset_bottom = 0.0779877
+offset_left = 86.0
+offset_top = 51.0
+offset_right = 672.0
+offset_bottom = 150.0
 theme_override_font_sizes/font_size = 72
 text = "$0.00"
 
+[node name="FuelBar" type="TextureProgressBar" parent="UI/PlayingControl"]
+layout_mode = 1
+offset_left = 81.0
+offset_top = 166.0
+offset_right = 652.0
+offset_bottom = 266.0
+max_value = 10000.0
+texture_progress = ExtResource("6_r8ohh")
+
+[node name="GameOverControl" type="Control" parent="UI"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GameOverText" type="Label" parent="UI/GameOverControl"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -206.0
+offset_top = 385.0
+offset_right = 205.0
+offset_bottom = 484.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 72
+text = "Game Over!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="OOFText" type="Label" parent="UI/GameOverControl"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -420.0
+offset_top = 489.0
+offset_right = 421.0
+offset_bottom = 572.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 60
+text = "Out of fuel"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RestartButton" type="Button" parent="UI/GameOverControl"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -226.0
+offset_top = 67.0
+offset_right = 226.0
+offset_bottom = 282.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 72
+text = "Restart"
+
+[connection signal="game_over" from="." to="Player" method="_on_world_game_over"]
 [connection signal="drilled_gold" from="LayerHolder" to="Player" method="_on_layer_holder_drilled_gold"]
 [connection signal="drill_down" from="Player" to="LayerHolder" method="_on_player_drill_down"]
 [connection signal="drill_left" from="Player" to="LayerHolder" method="_on_player_drill_left"]
 [connection signal="drill_right" from="Player" to="LayerHolder" method="_on_player_drill_right"]
+[connection signal="out_of_fuel" from="Player" to="." method="_on_player_out_of_fuel"]
 [connection signal="stop_drill" from="Player" to="LayerHolder" method="_on_player_stop_drill"]
 [connection signal="timeout" from="DrillTimer" to="LayerHolder" method="_on_drill_timer_timeout"]
+[connection signal="pressed" from="UI/GameOverControl/RestartButton" to="." method="_on_restart_button_pressed"]

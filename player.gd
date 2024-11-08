@@ -4,9 +4,11 @@ signal drill_down
 signal drill_left
 signal drill_right
 signal stop_drill
+signal out_of_fuel
 
 @onready var animated_sprite = $AnimatedSprite2D
-@onready var money_label = $"../UI/Control/MoneyLabel"
+@onready var money_label = $"../UI/PlayingControl/MoneyLabel"
+@onready var fuel_bar = $"../UI/PlayingControl/FuelBar"
 
 const MAX_SPEED = 750.0
 const ACCELERATION = 500.0 
@@ -14,21 +16,36 @@ const FRICTION = 1500.0
 
 const GOLD_VALUE = 25.0
 
-var money = 0.0
+@export var money = 0.0
+@export var fuel = 10000
+
+var playing = true
 
 func _physics_process(delta):
+	if !playing:
+		fuel_bar.value = fuel
+		animated_sprite.play("default")
+		velocity = get_gravity() * delta
+
+		move_and_slide()
+
+		return
+
 	var input_direction = Vector2()
 	
 	# Direction
 	if Input.is_action_pressed("left"):
 		input_direction.x -= 1
 		animated_sprite.play("left")
+		fuel -= 1
 	if Input.is_action_pressed("right"):
 		input_direction.x += 1
 		animated_sprite.play("right")
+		fuel -= 1
 	if Input.is_action_pressed("up"):
 		input_direction.y -= 1
 		animated_sprite.play("up")
+		fuel -= 2
 	if Input.is_action_pressed("up") and Input.is_action_pressed("left"):
 		animated_sprite.play("up_left")
 	if Input.is_action_pressed("up") and Input.is_action_pressed("right"):
@@ -61,20 +78,19 @@ func _physics_process(delta):
 		velocity = MAX_SPEED * (velocity.normalized())
 
 	move_and_slide()
-	
-	for i in get_slide_collision_count(): # Tile collision WIP
-		var collision = get_slide_collision(i)
-		if collision.get_collider() is TileMapLayer:
-			var land = collision.get_collider() as TileMapLayer
-
-			var own_tile = land.local_to_map(get_global_position())
-			var collide_tile = land.local_to_map(collision.get_position())
-			#print("I collided with ", land.name, " at ", collide_tile)
-		else:
-			pass
-			#print ("Collided with ", collision.get_collider().name)
 
 func _process(delta):
+	if !playing:
+		fuel = 0
+		return
+
+	if fuel <= 0:
+		out_of_fuel.emit()		
+		return
+
+	if Input.is_action_pressed("drill_down") or Input.is_action_pressed("drill_left") or Input.is_action_pressed("drill_right"):
+		fuel -= 1
+
 	if Input.is_action_just_pressed("drill_down"):
 		drill_down.emit()
 	if Input.is_action_just_pressed("drill_left"):
@@ -85,7 +101,12 @@ func _process(delta):
 		stop_drill.emit()
 
 	money_label.text = "$" + "%.2f" % money
+	fuel_bar.value = fuel
 
 
 func _on_layer_holder_drilled_gold():
 	money += GOLD_VALUE
+
+
+func _on_world_game_over():
+	playing = false
