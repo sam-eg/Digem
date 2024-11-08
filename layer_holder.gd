@@ -92,7 +92,7 @@ func add_fuel():
 		player.money -= 0.01
 		player.fuel += 10
 	elif player.money >= 0.01 and player.fuel < 10000:
-		player.money -= 0.1
+		player.money -= 0.01
 		player.fuel = 10000
 
 func _on_player_drill_down():
