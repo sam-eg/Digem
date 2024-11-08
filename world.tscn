@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://cn3fr85akqbbj"]
+[gd_scene load_steps=18 format=3 uid="uid://cn3fr85akqbbj"]
 
 [ext_resource type="Script" path="res://world.gd" id="1_byn0y"]
 [ext_resource type="Script" path="res://layer_holder.gd" id="1_tppkh"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://bcv4tijsen1ai" path="res://sky.png" id="2_u4yu6"]
 [ext_resource type="Texture2D" uid="uid://b8pk45e5s0g6f" path="res://ground.png" id="3_co1vy"]
 [ext_resource type="PackedScene" uid="uid://dyd305xyng33k" path="res://player.tscn" id="3_ljydt"]
+[ext_resource type="Texture2D" uid="uid://c7lt4euf5kugx" path="res://gas_station.png" id="6_d6qab"]
 [ext_resource type="Texture2D" uid="uid://7v60r0v7etyi" path="res://Fuel.png" id="6_r8ohh"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8u342"]
@@ -40,10 +41,17 @@ texture_region_size = Vector2i(64, 64)
 3:1/0 = 0
 4:1/0 = 0
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_74c4l"]
+texture = ExtResource("6_d6qab")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, 17.25, 32, 17.75, 32, 32, -32, 32)
+
 [sub_resource type="TileSet" id="TileSet_8nkuq"]
 tile_size = Vector2i(64, 64)
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_y0mek")
+sources/1 = SubResource("TileSetAtlasSource_74c4l")
 
 [sub_resource type="Curve" id="Curve_twsk1"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.996689, 0.169587), 0.0, 0.0, 0, 0]

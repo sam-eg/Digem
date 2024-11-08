@@ -14,6 +14,10 @@ const STONE_TILE = Vector2i(2, 1)
 const GOLD_TILE = Vector2i(4, 0)
 const AIR_TILE = Vector2i(0, 0)
 
+const GAS_SOURCE_ID = 1
+const GAS_TILE = Vector2i(0, 0)
+const GAS_LOC = Vector2i(0, -1)
+
 const DIRT_DRILL_TIME = 1.0
 const STONE_DRILL_TIME = 2.0
 const GOLD_DRILL_TIME = 1.5
@@ -37,14 +41,15 @@ var drill_direction
 var is_drilling_tile_gold
 
 func _process(_delta):
+	var tile_pos = land.local_to_map(player.position)
+	if tile_pos == GAS_LOC:
+		add_fuel()
+	load_chunk(tile_pos)
 
-	load_chunk(player.position)
-
-func load_chunk(player_position):
+func load_chunk(tile_pos):
 	land.clear()
 	background.clear()
 	
-	var tile_pos = land.local_to_map(player_position)
 	for tileX in range(CHUNK_SIZE):
 		for tileY in range(CHUNK_SIZE):
 			var current_tile_position = Vector2i(tileX + tile_pos.x - CHUNK_SIZE / 2, tileY + tile_pos.y - CHUNK_SIZE / 2)
@@ -57,7 +62,9 @@ func load_chunk(player_position):
 					background.set_cell(current_tile_position, BACKGROUND_GROUND_SOURCE_ID, BACKGROUND_TILE)
 
 			var tile_type
-			if land_map.has(current_tile_position): # Check if we already generated a tile for this position
+			if current_tile_position == GAS_LOC:
+				land.set_cell(current_tile_position, GAS_SOURCE_ID, GAS_TILE)
+			elif land_map.has(current_tile_position): # Check if we already generated a tile for this position
 				tile_type = land_map[current_tile_position]
 			elif land.get_cell_source_id(current_tile_position) == -1 && current_tile_position.y >= 0:
 				var tile_type_rand = randi() % 20
@@ -76,6 +83,13 @@ func load_chunk(player_position):
 				land.set_cell(current_tile_position, LAND_SOURCE_ID, tile_type)
 				land_map[current_tile_position] = tile_type
 
+func add_fuel():
+	if player.money >= 0.01 and player.fuel <= 9990:
+		player.money -= 0.01
+		player.fuel += 10
+	elif player.money >= 0.01 and player.fuel < 10000:
+		player.money -= 0.1
+		player.fuel = 10000
 
 func _on_player_drill_down():
 	drill(DIRECTION_DOWN)
