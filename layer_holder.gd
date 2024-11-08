@@ -44,6 +44,10 @@ func _process(_delta):
 	var tile_pos = land.local_to_map(player.position)
 	if tile_pos == GAS_LOC:
 		add_fuel()
+		
+	if drilled_tile != null:
+		player.fuel -= 1
+	
 	load_chunk(tile_pos)
 
 func load_chunk(tile_pos):

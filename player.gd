@@ -88,9 +88,6 @@ func _process(delta):
 		out_of_fuel.emit()		
 		return
 
-	if Input.is_action_pressed("drill_down") or Input.is_action_pressed("drill_left") or Input.is_action_pressed("drill_right"):
-		fuel -= 1
-
 	if Input.is_action_just_pressed("drill_down"):
 		drill_down.emit()
 	if Input.is_action_just_pressed("drill_left"):
