@@ -45,7 +45,7 @@ func _physics_process(delta):
 	if Input.is_action_pressed("up"):
 		input_direction.y -= 1
 		animated_sprite.play("up")
-		fuel -= 2
+		fuel -= 1
 	if Input.is_action_pressed("up") and Input.is_action_pressed("left"):
 		animated_sprite.play("up_left")
 	if Input.is_action_pressed("up") and Input.is_action_pressed("right"):
