@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://dyd305xyng33k"]
+[gd_scene load_steps=12 format=3 uid="uid://dyd305xyng33k"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_vasf4"]
 [ext_resource type="Texture2D" uid="uid://dto7ujkksf4su" path="res://player.png" id="2_o8ab4"]
 [ext_resource type="Texture2D" uid="uid://bn1lvj1886mdi" path="res://player_left.png" id="3_f1500"]
+[ext_resource type="Texture2D" uid="uid://ulc602b2ow3c" path="res://player_left_right.png" id="4_5dlmg"]
 [ext_resource type="Texture2D" uid="uid://cffpjh7wn8pux" path="res://player_right.png" id="4_aojim"]
 [ext_resource type="Texture2D" uid="uid://ctdsdkhcene38" path="res://player_up.png" id="5_5gtkv"]
 [ext_resource type="Texture2D" uid="uid://dme5ic4bpu2es" path="res://player_up_left.png" id="6_d7t74"]
@@ -28,6 +29,14 @@ animations = [{
 }],
 "loop": true,
 "name": &"left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_5dlmg")
+}],
+"loop": true,
+"name": &"left_right",
 "speed": 5.0
 }, {
 "frames": [{
@@ -83,4 +92,4 @@ zoom = Vector2(1.4, 1.4)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_v1nhi")
-animation = &"up_right"
+animation = &"left_right"

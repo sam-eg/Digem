@@ -50,6 +50,8 @@ func _physics_process(delta):
 		animated_sprite.play("up_left")
 	if Input.is_action_pressed("up") and Input.is_action_pressed("right"):
 		animated_sprite.play("up_right")
+	if Input.is_action_pressed("left") and Input.is_action_pressed("right"):
+		animated_sprite.play("left_right")
 	if Input.is_action_pressed("up") and Input.is_action_pressed("left") and Input.is_action_pressed("right"):
 		animated_sprite.play("up_left_right")
 	if !Input.is_action_pressed("left") and !Input.is_action_pressed("right") and !Input.is_action_pressed("up"):
