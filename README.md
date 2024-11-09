@@ -7,3 +7,4 @@ Currently working:
 * Procedural world generation including a background of dirt and sky.
 * Player movement with WAD including a sprite!
 * Drilling with the arrow keys
+* Money, fuel, and refueling
